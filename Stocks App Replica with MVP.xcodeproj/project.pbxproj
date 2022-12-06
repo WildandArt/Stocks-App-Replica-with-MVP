@@ -10,9 +10,12 @@
 		5CD7DE7E293EF6070055DA95 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7DE7D293EF6070055DA95 /* AppDelegate.swift */; };
 		5CD7DE80293EF6070055DA95 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7DE7F293EF6070055DA95 /* SceneDelegate.swift */; };
 		5CD7DE82293EF6070055DA95 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7DE81293EF6070055DA95 /* ViewController.swift */; };
-		5CD7DE85293EF6070055DA95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5CD7DE83293EF6070055DA95 /* Main.storyboard */; };
 		5CD7DE87293EF6090055DA95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5CD7DE86293EF6090055DA95 /* Assets.xcassets */; };
 		5CD7DE8A293EF6090055DA95 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5CD7DE88293EF6090055DA95 /* LaunchScreen.storyboard */; };
+		5CD7DE92293F52620055DA95 /* CandleDataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7DE91293F52610055DA95 /* CandleDataResponse.swift */; };
+		5CD7DE95293F52A70055DA95 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7DE94293F52A70055DA95 /* NetworkManager.swift */; };
+		5CD7DE97293F9C420055DA95 /* SourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7DE96293F9C420055DA95 /* SourceProtocol.swift */; };
+		5CD7DE99293F9C660055DA95 /* CandleStickSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7DE98293F9C660055DA95 /* CandleStickSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,10 +23,13 @@
 		5CD7DE7D293EF6070055DA95 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5CD7DE7F293EF6070055DA95 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		5CD7DE81293EF6070055DA95 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		5CD7DE84293EF6070055DA95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5CD7DE86293EF6090055DA95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5CD7DE89293EF6090055DA95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5CD7DE8B293EF6090055DA95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5CD7DE91293F52610055DA95 /* CandleDataResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandleDataResponse.swift; sourceTree = "<group>"; };
+		5CD7DE94293F52A70055DA95 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		5CD7DE96293F9C420055DA95 /* SourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceProtocol.swift; sourceTree = "<group>"; };
+		5CD7DE98293F9C660055DA95 /* CandleStickSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandleStickSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,12 +65,23 @@
 				5CD7DE7D293EF6070055DA95 /* AppDelegate.swift */,
 				5CD7DE7F293EF6070055DA95 /* SceneDelegate.swift */,
 				5CD7DE81293EF6070055DA95 /* ViewController.swift */,
-				5CD7DE83293EF6070055DA95 /* Main.storyboard */,
+				5CD7DE94293F52A70055DA95 /* NetworkManager.swift */,
+				5CD7DE96293F9C420055DA95 /* SourceProtocol.swift */,
+				5CD7DE98293F9C660055DA95 /* CandleStickSource.swift */,
+				5CD7DE93293F52890055DA95 /* Model */,
 				5CD7DE86293EF6090055DA95 /* Assets.xcassets */,
 				5CD7DE88293EF6090055DA95 /* LaunchScreen.storyboard */,
 				5CD7DE8B293EF6090055DA95 /* Info.plist */,
 			);
 			path = "Stocks App Replica with MVP";
+			sourceTree = "<group>";
+		};
+		5CD7DE93293F52890055DA95 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5CD7DE91293F52610055DA95 /* CandleDataResponse.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +144,6 @@
 			files = (
 				5CD7DE8A293EF6090055DA95 /* LaunchScreen.storyboard in Resources */,
 				5CD7DE87293EF6090055DA95 /* Assets.xcassets in Resources */,
-				5CD7DE85293EF6070055DA95 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,21 +156,17 @@
 			files = (
 				5CD7DE82293EF6070055DA95 /* ViewController.swift in Sources */,
 				5CD7DE7E293EF6070055DA95 /* AppDelegate.swift in Sources */,
+				5CD7DE97293F9C420055DA95 /* SourceProtocol.swift in Sources */,
+				5CD7DE95293F52A70055DA95 /* NetworkManager.swift in Sources */,
 				5CD7DE80293EF6070055DA95 /* SceneDelegate.swift in Sources */,
+				5CD7DE92293F52620055DA95 /* CandleDataResponse.swift in Sources */,
+				5CD7DE99293F9C660055DA95 /* CandleStickSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		5CD7DE83293EF6070055DA95 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5CD7DE84293EF6070055DA95 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		5CD7DE88293EF6090055DA95 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -292,7 +304,6 @@
 				INFOPLIST_FILE = "Stocks App Replica with MVP/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -320,7 +331,6 @@
 				INFOPLIST_FILE = "Stocks App Replica with MVP/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
