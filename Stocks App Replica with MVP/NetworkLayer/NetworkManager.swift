@@ -23,7 +23,7 @@ struct timesConstants{
 }
 class NetworkManager {
 
-    static let tokenQueryItem = URLQueryItem(name: "token", value: "")
+    static let tokenQueryItem = URLQueryItem(name: "token", value: "cdu8amqad3i5v3urh37gcdu8amqad3i5v3urh380")
     
 
     func request<T : Codable>(with url : URL, completion: @escaping (Result<T, NetworkError>)->()){
