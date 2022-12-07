@@ -20,14 +20,13 @@ class CandleSticksSource : Source{
         var today = Date().timeIntervalSince1970
         var sevenDaysAgo = today - TimeInterval(timesConstants.week)
         var components = URLComponents(string: baseUrl.absoluteString)
-        let token = NetworkManager.token.first!
 
         components?.queryItems = [
                                   .init(name: "symbol", value: symbol),
                                   .init(name: "resolution", value: "1"),
                                   .init(name: "from", value: "\(Int(sevenDaysAgo))"),
                                   .init(name: "to", value: "\(Int(today))"),
-                                  .init(name: token.key, value: token.value)]
+                                   NetworkManager.tokenQueryItem]
         return components?.url
     }
 }

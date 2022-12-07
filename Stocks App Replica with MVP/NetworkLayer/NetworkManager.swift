@@ -13,6 +13,7 @@ enum NetworkError : String, Error{
 }
 enum EndPoint: String{
     case candleStick = "candle?"
+    case symbolLookup = "search?"
 }
 
 struct timesConstants{
@@ -22,9 +23,10 @@ struct timesConstants{
 }
 class NetworkManager {
 
-    static let token = ["token" : "cdu8amqad3i5v3urh37gcdu8amqad3i5v3urh380"]
+    static let tokenQueryItem = URLQueryItem(name: "token", value: "")
+    
 
-    func candleRequest<T : Codable>(with url : URL, completion: @escaping (Result<T, NetworkError>)->()){
+    func request<T : Codable>(with url : URL, completion: @escaping (Result<T, NetworkError>)->()){
 
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error as? NetworkError {completion(.failure(error))}
