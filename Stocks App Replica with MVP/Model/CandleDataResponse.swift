@@ -27,6 +27,12 @@ struct CandlesDataResponse{
         }
         return candles
     }
+    var lastPrice : Double {
+        let sorted = candles.sorted { $0.date < $1.date }
+        print("first date: \(sorted[0].date) and last date:\((sorted.last?.date)!)")
+        guard let last = sorted.last?.close else{fatalError()}
+        return last
+    }
 }
 extension CandlesDataResponse : Codable{
     enum CodingKeys : String, CodingKey{
@@ -45,4 +51,6 @@ struct Candle : Codable{
     let open : Double
     let close : Double
     let date : Date
+
 }
+

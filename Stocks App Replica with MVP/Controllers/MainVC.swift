@@ -10,17 +10,17 @@ protocol searchResultDelegate : AnyObject {
     func maybe(results : [SearchResult])->[SearchResult]
 }
 class MainVC: UIViewController, UISearchControllerDelegate {
-
     var searchTimer : Timer?
     var symbolResults = [SearchResult]()
     var networkmanager : NetworkManager?
-    var watchList = ["AAPL", "MSFT"]
-    var candleSticks = [String : CandlesDataResponse]()
+    var watchList = ["AAPL", "MSFT", "META", "SNAP"]
+    var candleSticks = [String : [Candle]]()
 
     var tableView : UITableView = {
         let tableview = UITableView()
         tableview.register(MainViewCell.self,
                            forCellReuseIdentifier: MainViewCell.identifier)
+
         return tableview
     }()
 
@@ -31,7 +31,9 @@ class MainVC: UIViewController, UISearchControllerDelegate {
         networkmanager = NetworkManager()
         setupTableView()
         setupWatchlist()
+
     }
+
     func setupSearch(){
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Stocks"
@@ -42,8 +44,13 @@ class MainVC: UIViewController, UISearchControllerDelegate {
         stocksSearchController.searchResultsUpdater = self
         navigationItem.searchController = stocksSearchController
     }
+    func setUpRefreshControl(){
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(setupWatchlist), for: .valueChanged)
+    }
     func setupTableView(){
         view.addSubview(tableView)
+        setUpRefreshControl()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
@@ -54,9 +61,17 @@ class MainVC: UIViewController, UISearchControllerDelegate {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    func setupWatchlist(){
+    @objc func setupWatchlist(){
+//        //Dispatch Group
+        let group = DispatchGroup()
+        var dict = [String : [Candle]]()
+
         for symbol in watchList{
+
             let url = CandleSticksSource(symbol: symbol).createUrl()!
+
+
+            group.enter()
             networkmanager?.request(with: url, completion: {
                 [weak self] (result : Result<CandlesDataResponse, NetworkError>) in
 
@@ -64,12 +79,26 @@ class MainVC: UIViewController, UISearchControllerDelegate {
 
                 switch result{
                     case .success(let response):
-                    self.candleSticks[symbol] = response
+                    dict[symbol] = response.candles
+                    print(dict.keys)
+                    print("is nil?\(dict[symbol]?.isEmpty)")
                     case .failure(let error):
-                    print(error)
+                        print(error)
                 }
+                self.tableView.refreshControl?.endRefreshing()
+                group.leave()
             })
         }
+
+        group.notify(queue: .main) {
+//            guard let self = self else {return}
+            print("notify")
+            print("dict :\(dict.keys)")
+            self.candleSticks = dict
+            print(self.candleSticks.keys)
+            self.tableView.reloadData()
+        }
+
         //make an api call for each stock in a watchlist and then present the recent price
         //for that: create a candlestick source,
         //request for that symbol and fetch the last price, append to a list in tableview
@@ -121,19 +150,70 @@ extension MainVC : UISearchResultsUpdating{
         //call for symbol request with the network manager
     }
 }
+extension MainVC{
+    func sortedByDateCandleArray(for symbol: String)-> [Candle]?{
+
+        guard var candleArray = candleSticks[symbol] else {
+            print("for this symbol: \(symbol) candle array is nil")
+            return nil}
+        return candleArray.sorted{$0.date < $1.date}
+    }
+    func getLastPrice(for symbol : String) -> Double?{
+        var sortedArray = sortedByDateCandleArray(for: symbol)
+        guard let last = sortedArray?.last else {return nil}
+        print("Last CLOSE : \(last.close) date: \(last.date)")
+        return last.close
+    }
+    func getChangeInPrice(for symbol: String)-> Double?{
+
+        let sortedArray = sortedByDateCandleArray(for: symbol)
+//        print(sortedArray?.forEach({ c in
+//            print(c.close)
+//        }))
+        let twentyFourHoursInSeconds = 60 * 60 * 24
+        var lastDate = sortedArray?.last?.date
+        guard var lastDateBackTwentyFour = lastDate?.addingTimeInterval(-TimeInterval(twentyFourHoursInSeconds))
+                                                          else {return nil}
+        print("lastDate: \(lastDate)")
+        guard let prevCandle = sortedArray?.last(where: { candle in
+            candle.date < lastDateBackTwentyFour
+        }) else {return nil}
+        print("prevDate\(prevCandle.date)")
+        let prevPrice = (prevCandle.close)
+        guard let lastPrice = getLastPrice(for: symbol) else {return nil}
+        let changeRatio = lastPrice/prevPrice
+        let percentages = changeRatio - 1
+        print("percentages: \(percentages)")
+        return percentages
+
+        //let previous = sortedArray.
+        //let last = getLastPrice(for: symbol)
+    }
+}
 extension MainVC : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
          guard let cell = tableView.dequeueReusableCell(
             withIdentifier: MainViewCell.identifier,
             for: indexPath) as? MainViewCell else {fatalError()}
-        cell.priceLabel.text = "148.9"
-        cell.symbolLabel.text = "AAPL"
+        let symbol = watchList[indexPath.row]
+        cell.priceLabel.text = String(describing: getLastPrice(for: symbol) ?? 0)
+        let change = getChangeInPrice(for: symbol) ?? 0
+        if change > 0 {
+            cell.priceChangeLabel.backgroundColor = .systemGreen
+        }
+        else{
+            cell.priceChangeLabel.backgroundColor = .systemRed
+        }
+        print("change \(NumberFormatter.customNumberFormatter.string(from: change as NSNumber))")
+        cell.priceChangeLabel.text = NumberFormatter.customNumberFormatter.string(from: change as NSNumber)
+        cell.symbolLabel.text = watchList[indexPath.row]
+        
         return cell
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return watchList.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return CGFloat(60.0)

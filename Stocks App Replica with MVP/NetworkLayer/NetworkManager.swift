@@ -38,7 +38,9 @@ class NetworkManager {
             do {
                 let decoded = try decoder.decode(T.self
                                                  , from: data)
-                completion(.success(decoded))
+                DispatchQueue.main.async {
+                    completion(.success(decoded))
+                }
             } catch  {
                 completion(.failure(NetworkError.decodingError))
             }
